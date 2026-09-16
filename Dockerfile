@@ -5,6 +5,9 @@ FROM node:20-alpine AS build
 WORKDIR /app
 RUN corepack enable
 COPY package.json pnpm-lock.yaml ./
+# pnpm 10+ blocks postinstall scripts; without this pnpm install fails with
+# ERR_PNPM_IGNORED_BUILDS and esbuild never gets a binary, so tsx cannot run.
+RUN printf 'allowBuilds:\n  esbuild: true\n' > pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile
 COPY tsconfig.json vitest.config.ts ./
 COPY src ./src
@@ -20,6 +23,7 @@ RUN corepack enable \
   && mkdir -p /app/data \
   && chown -R wkb:wkb /app/data
 COPY package.json pnpm-lock.yaml ./
+RUN printf 'allowBuilds:\n  esbuild: true\n' > pnpm-workspace.yaml
 RUN pnpm install --frozen-lockfile --omit=dev && pnpm store prune
 COPY --from=build /app/src ./src
 COPY --from=build /app/wb_v3config.public.json ./wb_v3config.public.json

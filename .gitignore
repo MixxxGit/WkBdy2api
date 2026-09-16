@@ -9,5 +9,7 @@ dist/
 *.pcap
 account-store.key
 data/
+logs/
+.server.pid
 make-public-config.cjs
 wb_v3config_live.json
