@@ -618,7 +618,10 @@ h2 { font-size:30px; letter-spacing:-.04em; line-height:1.08; margin:4px 0 8px; 
       '账号已登录并加入池中。': 'Аккаунт добавлен в пул.',
       '上下文': 'Контекст',
       '输入': 'Ввод',
-      '输出': 'Вывод'
+      '输出': 'Вывод',
+      '网页登录 · 仅保存在服务内存中': 'Вход через сайт · только в памяти сервиса',
+      '已导入凭据': 'Импортированные данные',
+      '需要重新网页登录': 'Требуется повторный вход через сайт'
     },
     en: {
       '概览': 'Overview',
@@ -721,7 +724,10 @@ h2 { font-size:30px; letter-spacing:-.04em; line-height:1.08; margin:4px 0 8px; 
       '账号已登录并加入池中。': 'Account signed in and joined the pool.',
       '上下文': 'Context',
       '输入': 'Input',
-      '输出': 'Output'
+      '输出': 'Output',
+      '网页登录 · 仅保存在服务内存中': 'Website login · kept in service memory only',
+      '已导入凭据': 'Imported credentials',
+      '需要重新网页登录': 'Website re-login required'
     }
   };
 
