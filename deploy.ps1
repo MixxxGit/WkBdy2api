@@ -133,7 +133,7 @@ try {
   $workspaceFile = Join-Path $InstallDir 'pnpm-workspace.yaml'
   if (-not (Test-Path -LiteralPath $workspaceFile)) {
     Write-Step 'allowing esbuild postinstall (pnpm-workspace.yaml)'
-    "allowBuilds:`n  esbuild: true`n" | Set-Content -LiteralPath $workspaceFile -Encoding ascii -NoNewline
+    [System.IO.File]::WriteAllText($workspaceFile, "allowBuilds:`r`n  esbuild: true`r`n", (New-Object System.Text.UTF8Encoding($false)))
   }
 
   # --- 5. зависимости -------------------------------------------------------
@@ -157,8 +157,11 @@ try {
     if (-not (Test-Path -LiteralPath $exampleFile)) { Fail '.env.example not found, nothing to bootstrap the config from.' }
     $apiKey = 'wkb-' + [BitConverter]::ToString((Get-RandomBytes 24)).Replace('-', '').ToLowerInvariant()
     $content = Get-Content -LiteralPath $exampleFile
-    $content = $content -replace '^WKB2API_API_KEY=.*$', "WKB2API_API_KEY=$apiKey"
-    Set-Content -LiteralPath $envFile -Value $content -Encoding utf8
+    $content = ($content -replace '^WKB2API_API_KEY=.*$', "WKB2API_API_KEY=$apiKey") -join "`r`n"
+    # Пишем без BOM: Node process.loadEnvFile не понимает BOM и теряет первую
+    # переменную (WKB2API_API_KEY), из-за чего сервер падает на старте.
+    $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+    [System.IO.File]::WriteAllText($envFile, $content + "`r`n", $utf8NoBom)
     Write-Ok 'generated .env with a random API key'
   } else {
     Write-Ok '.env already exists, keeping it'
